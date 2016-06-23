@@ -1,2 +1,3 @@
-# springmvccases
-springMVC源码探究学习
+#### SPRING MVC 
+1. 学习设计和框架的思路
+2. 查看源码
