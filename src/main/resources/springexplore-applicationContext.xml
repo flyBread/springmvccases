@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/context   
+          http://www.springframework.org/schema/context/spring-context-3.2.xsd   
+          http://www.springframework.org/schema/beans   
+          http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+          http://www.springframework.org/schema/tx
+          http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+          http://www.springframework.org/schema/aop
+          http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+
+	<!-- Controller 类注解标识 -->
+	<context:component-scan base-package="org.springframework.mvc" />
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+	<!-- 定义事务管理器（声明式的事务） -->
+	<bean name="transactionManager" class="org.springframework.mvc.tx.MyTransactionManager" />
+
+	<!-- 配置AOP面向切面 -->
+	<aop:config>
+		<aop:pointcut id="allMethod" expression="execution(* com..*.*(..))" />
+		<aop:advisor pointcut-ref="allMethod" advice-ref="txAdvice" />
+	</aop:config>
+
+	<!-- 配置事务传播特性 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="add*" propagation="REQUIRED" />
+			<tx:method name="del*" propagation="REQUIRED" />
+			<tx:method name="modify*" propagation="REQUIRED" />
+			<tx:method name="*" read-only="true" />
+		</tx:attributes>
+	</tx:advice>
+
+	<bean name="bean" class="org.springframework.mvc.tx.Bean">
+		<property name="name" value="事务配置测试" />
+	</bean>
+	
+	<!-- 事务基类 -->
+    <bean id="transactionBase" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+            lazy-init="true" abstract="true"> 
+        <!-- 配置事务管理器 --> 
+        <property name="transactionManager" ref="transactionManager" /> 
+        <!-- 配置事务属性 --> 
+        <property name="transactionAttributes"> 
+            <props> 
+                <prop key="*">PROPAGATION_REQUIRED</prop> 
+            </props> 
+        </property> 
+    </bean>    
+     
+    <bean id="serviceTarget" class="com.what21.spring.aop5.ServiceImpl" />
+     
+    <bean id="service" parent="transactionBase" > 
+        <property name="target" ref="serviceTarget" />  
+    </bean>
+
+</beans>
