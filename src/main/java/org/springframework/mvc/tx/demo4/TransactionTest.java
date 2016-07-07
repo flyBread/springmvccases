@@ -16,6 +16,6 @@ public class TransactionTest {
 	
 	@Test
 	public void demo1(){
-		accountService.transfer("aaa", "bbb", 200d);
+		accountService.transfer( "bbb","aaa", 12200d);
 	}
 }
