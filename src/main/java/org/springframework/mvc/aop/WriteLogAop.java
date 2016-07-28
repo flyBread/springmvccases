@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 public class WriteLogAop implements MethodInterceptor {
 	  public static final Logger logger = LoggerFactory.getLogger(WriteLogAop.class);
 
-	  @Override
 	  public Object invoke(MethodInvocation arg0) throws Throwable {
 	    String method = arg0.getMethod().toString();
 	    Object[] arguments = arg0.getArguments();
