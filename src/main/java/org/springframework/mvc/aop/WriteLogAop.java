@@ -26,7 +26,6 @@ public class WriteLogAop implements MethodInterceptor {
 	    long e = System.currentTimeMillis();
 	    logger.info(method +" paramValue = " + paramValue.toString() + " use time = " + (e - s) + "ms");
 	    return result;
-
 	  }
 
 	}
